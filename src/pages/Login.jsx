@@ -6,16 +6,18 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../axios/axios"
+import api from "../axios/axios";
 
 function Login() {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+ 
   const navigate = useNavigate();
+
   const onChange = (event) => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
@@ -26,18 +28,18 @@ function Login() {
     login();
   };
 
-  async function login(){
+  async function login() {
     await api.postLogin(user).then(
-      (response)=>{
-        alert(response.data.message)
+      (response) => {
+        alert(response.data.message);
         localStorage.setItem('authenticated', true)
-        navigate("users/")
+        navigate("users/");
       },
-    (error)=>{
-      console.log(error)
-      alert(error.response.data.error)
-    }
-    )
+      (error) => {
+        console.log(error);
+        alert(error.response.data.error);
+      }
+    );
   }
 
   return (
@@ -102,18 +104,19 @@ function Login() {
           >
             Entrar
           </Button>
-          <Button type="submit"
+          <Button
+            type="submit"
             fullWidth
             variant="contained"
             sx={{
               mt: 3,
               mb: 2,
               backgroundColor: "green",
-            }}>
+            }}
+          >
             <Link to="/cadastro">Cadastro</Link>
           </Button>
         </Box>
-        
       </Box>
     </Container>
   );
