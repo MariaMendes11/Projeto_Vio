@@ -10,6 +10,7 @@ import api from "../axios/axios";
 import { Button, IconButton, Alert, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
+import ModalCriarIngresso from "../components/ModalCriarIngresso";
 
 function ListEventos() {
   const [evento, setEvento] = useState([]);
@@ -55,11 +56,22 @@ function ListEventos() {
       <TableCell align="center">{evento.descricao}</TableCell>
       <TableCell align="center">{evento.data_hora}</TableCell>
       <TableCell align="center">{evento.local}</TableCell>
+      <TableCell>
+          <img
+          src={`http://localhost:5000/api/v1/evento/imagem/${evento.id_evento}`}
+          alt="Imagem do evento"
+          style={{width:"80px",height:"80px",objectFit:"cover"}}
+          />
+        </TableCell>
       <TableCell align="center">
         <IconButton onClick={() => deleteEvento(evento.id_evento)}>
           <DeleteIcon color="error" />
         </IconButton>
       </TableCell>
+      <TableCell align="center">
+          <IconButton onClick={() => abrirModalIngresso(evento)}>
+          </IconButton>
+        </TableCell>
     </TableRow>
   ));
 
@@ -71,6 +83,19 @@ function ListEventos() {
   useEffect(() => {
     getAllEventos();
   }, []);
+
+  const [eventoSelecionado, setEventoSelecionado] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const abrirModalIngresso = (evento) => {
+    setEventoSelecionado(evento);
+    setModalOpen(true);
+  };
+
+  const fecharModalIngresso = () => {
+    setModalOpen(false);
+    setEventoSelecionado("");
+  };
 
   return (
     <div>
@@ -88,6 +113,11 @@ function ListEventos() {
           {alert.message}
         </Alert>
       </Snackbar>
+      <ModalCriarIngresso
+        open={modalOpen}
+        onClose={fecharModalIngresso}
+        eventoSelecionado={eventoSelecionado}
+      />
       {evento.length === 0 ? (
         <h1>Carregando eventos</h1>
       ) : (
@@ -103,7 +133,9 @@ function ListEventos() {
                   <TableCell align="center">Descrição</TableCell>
                   <TableCell align="center">Data_hora</TableCell>
                   <TableCell align="center">Local</TableCell>
+                  <TableCell align="center">Imagem</TableCell>
                   <TableCell align="center">Ações</TableCell>
+                  <TableCell align="center">Criar Evento</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>{eventosListados}</TableBody>
